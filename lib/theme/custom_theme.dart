@@ -9,7 +9,7 @@ class CustomTheme {
       colorScheme: ColorScheme.fromSwatch(
         brightness: Brightness.dark,
         primarySwatch: MaterialColor(
-          Palette.red500.value,
+          Palette.gradientPurple.value,
           const {
             100: Palette.red100,
             200: Palette.red200,
@@ -22,7 +22,7 @@ class CustomTheme {
             900: Palette.red900,
           },
         ),
-        accentColor: Palette.red500,
+        accentColor: Colors.pink,
       ),
       scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
@@ -43,6 +43,7 @@ class CustomTheme {
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              
             ),
           )
           .apply(

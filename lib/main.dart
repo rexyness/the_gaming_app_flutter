@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Gaming Trade',
       debugShowMaterialGrid: false,
       debugShowCheckedModeBanner: false,
       theme: CustomTheme.darkTheme(context),
