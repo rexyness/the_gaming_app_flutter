@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:the_gaming_app/features/home/overview_screen.dart';
 import 'package:the_gaming_app/models/game_model.dart';
+import 'package:the_gaming_app/theme/assets_class.dart';
 import 'package:the_gaming_app/theme/palette.dart';
-
 import 'widgets/game_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static const gameImageLists = [
     Game(
@@ -27,9 +29,7 @@ class HomeScreen extends StatelessWidget {
     ),
   ];
   @override
-  Widget build(BuildContext context) {
-    Game x = const Game(title: "title", followers: 3, imageUrl: "imageUrl");
-    x.copyWith(imageUrl: "xx");
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -39,19 +39,19 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 35),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //App Bar
-              const HomeAppBar(),
-              const SizedBox(
-                height: 25,
-              ),
-              //Featured Cards
-              Text(
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //App Bar
+            const HomeAppBar(),
+            const SizedBox(
+              height: 25,
+            ),
+            //Featured Cards
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
                 'Featured',
                 textAlign: TextAlign.left,
                 style: GoogleFonts.roboto(
@@ -59,34 +59,77 @@ class HomeScreen extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                height: 250,
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 15,
-                  ),
-                  shrinkWrap: true,
-                  itemCount: gameImageLists.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return GameCard(
-                      backgroundImage: gameImageLists[index].imageUrl,
-                      followersCount: gameImageLists[index].followers,
-                      title: gameImageLists[index].title,
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const FeaturedList(gameImageLists: gameImageLists),
+            const SizedBox(
+              height: 25,
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class FeaturedList extends StatelessWidget {
+  const FeaturedList({
+    Key? key,
+    required this.gameImageLists,
+  }) : super(key: key);
+
+  final List<Game> gameImageLists;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: SizedBox(
+        height: 250,
+        child: ListView.separated(
+          separatorBuilder: (context, index) => const SizedBox(
+            width: 15,
+          ),
+          shrinkWrap: true,
+          itemCount: gameImageLists.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            if (index == gameImageLists.length - 1) {
+              return Row(
+                children: [
+                  HeroGameCard(myGame: gameImageLists[index]),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                ],
+              );
+            }
+            return HeroGameCard(myGame: gameImageLists[index]);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class HeroGameCard extends StatelessWidget {
+  final Game myGame;
+  const HeroGameCard({
+    Key? key,
+    required this.myGame,
+    
+  }) : super(key: key);
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return GameCard(
+      backgroundImage: myGame.imageUrl,
+      followersCount: myGame.followers,
+      title: myGame.title,
     );
   }
 }
@@ -95,28 +138,37 @@ class HomeAppBar extends StatelessWidget {
   const HomeAppBar({
     Key? key,
   }) : super(key: key);
-
+  static const kRadius = 25.0;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CircleAvatar(
-          radius: 25,
-          backgroundColor: Colors.white12,
-          child: IconButton(
-            icon: const Icon(
-              Icons.menu_sharp,
-              color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 35),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CircleAvatar(
+            radius: kRadius,
+            backgroundColor: Colors.white12,
+            child: IconButton(
+              splashRadius: kRadius,
+              icon: Image.asset(
+                Assets.menuIconPath,
+                height: kRadius,
+                color: Colors.white,
+              ),
+              // icon: const Icon(
+              //   Icons.menu_sharp,
+              //   color: Colors.white,
+              // ),
+              onPressed: () {},
             ),
-            onPressed: () {},
           ),
-        ),
-        const CircleAvatar(
-          radius: 25,
-          backgroundImage: NetworkImage('https://avatarfiles.alphacoders.com/287/287747.jpg'),
-        ),
-      ],
+          const CircleAvatar(
+            radius: kRadius,
+            backgroundImage: NetworkImage('https://avatarfiles.alphacoders.com/287/287747.jpg'),
+          ),
+        ],
+      ),
     );
   }
 }
