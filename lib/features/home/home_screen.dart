@@ -99,37 +99,17 @@ class FeaturedList extends StatelessWidget {
             if (index == gameImageLists.length - 1) {
               return Row(
                 children: [
-                  HeroGameCard(myGame: gameImageLists[index]),
+                  GameCard(game: gameImageLists[index]),
                   const SizedBox(
                     width: 15,
                   ),
                 ],
               );
             }
-            return HeroGameCard(myGame: gameImageLists[index]);
+            return GameCard(game: gameImageLists[index]);
           },
         ),
       ),
-    );
-  }
-}
-
-class HeroGameCard extends StatelessWidget {
-  final Game myGame;
-  const HeroGameCard({
-    Key? key,
-    required this.myGame,
-    
-  }) : super(key: key);
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return GameCard(
-      backgroundImage: myGame.imageUrl,
-      followersCount: myGame.followers,
-      title: myGame.title,
     );
   }
 }

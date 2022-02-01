@@ -3,29 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:the_gaming_app/models/game_model.dart';
 import 'package:the_gaming_app/theme/palette.dart';
 
 import '../overview_screen.dart';
 
 class GameCard extends HookConsumerWidget {
-  final String backgroundImage;
-  final String title;
-  final int followersCount;
+  final Game game;
   const GameCard({
     Key? key,
-    required this.backgroundImage,
-    required this.title,
-    required this.followersCount,
+    required this.game,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _textAnimationController = useAnimationController(
       duration: const Duration(seconds: 1),
-      
       lowerBound: 0.0,
       upperBound: 1.0,
-      
     );
     const kCardHeight = 250.0;
 
@@ -35,19 +30,20 @@ class GameCard extends HookConsumerWidget {
       opacityText.value = _textAnimationController.value;
     });
     _textAnimationController.forward();
+
     return GestureDetector(
       onTap: () {
+        
         Navigator.of(context)
             .push(
           MaterialPageRoute<void>(
             builder: (BuildContext context) => OverviewScreen(
-              backgroundImage: backgroundImage,
+              backgroundImage: game.imageUrl,
             ),
           ),
         )
             .whenComplete(() {
           _textAnimationController.reset();
-          // Future.delayed(const Duration(seconds: 3)).then((_) => _textAnimationController.forward());
         });
       },
       child: ClipRRect(
@@ -60,9 +56,9 @@ class GameCard extends HookConsumerWidget {
               // Image
               Hero(
                 transitionOnUserGestures: true,
-                tag: backgroundImage,
+                tag: game.imageUrl,
                 child: CachedNetworkImage(
-                  imageUrl: backgroundImage,
+                  imageUrl: game.imageUrl,
                   imageBuilder: (context, imageProvider) => Container(
                     height: kCardHeight,
                     width: 330,
@@ -115,7 +111,7 @@ class GameCard extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          title,
+                          game.title,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -128,7 +124,7 @@ class GameCard extends HookConsumerWidget {
                           height: 10,
                         ),
                         Text(
-                          '$followersCount followers',
+                          '${game.followers} followers',
                           textAlign: TextAlign.start,
                         )
                       ],

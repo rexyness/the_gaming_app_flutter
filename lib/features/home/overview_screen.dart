@@ -16,24 +16,27 @@ class OverviewScreen extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        body: SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Hero(
-            transitionOnUserGestures: true,
-            tag: backgroundImage,
-            child: CachedNetworkImage(
-              imageUrl: backgroundImage,
-              imageBuilder: (context, imageProvider) => Container(
-                height: 250,
-                width: 330,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(fit: BoxFit.fitHeight, image: imageProvider),
+        body: ClipRRect(
+        borderRadius: BorderRadius.circular(1),
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Hero(
+              transitionOnUserGestures: true,
+              tag: backgroundImage,
+              child: CachedNetworkImage(
+                imageUrl: backgroundImage,
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 250,
+                  width: 330,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    image: DecorationImage(fit: BoxFit.fitHeight, image: imageProvider),
+                  ),
                 ),
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
         ),
