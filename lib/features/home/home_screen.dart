@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:the_gaming_app/features/home/overview_screen.dart';
+import 'package:the_gaming_app/features/settings/settings_screen.dart';
 import 'package:the_gaming_app/models/game_model.dart';
 import 'package:the_gaming_app/theme/assets_class.dart';
 import 'package:the_gaming_app/theme/palette.dart';
@@ -140,7 +141,9 @@ class HomeAppBar extends StatelessWidget {
               //   Icons.menu_sharp,
               //   color: Colors.white,
               // ),
-              onPressed: () {},
+              onPressed: () {
+                context.push('/settings');
+              },
             ),
           ),
           const CircleAvatar(

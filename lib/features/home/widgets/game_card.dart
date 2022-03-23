@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:the_gaming_app/models/game_model.dart';
 import 'package:the_gaming_app/theme/palette.dart';
 
-import '../overview_screen.dart';
 
 class GameCard extends HookConsumerWidget {
   final Game game;
@@ -14,33 +14,24 @@ class GameCard extends HookConsumerWidget {
     Key? key,
     required this.game,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final opacityText = useState(0.0);
     final _textAnimationController = useAnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 750),
       lowerBound: 0.0,
       upperBound: 1.0,
     )..forward();
     const kCardHeight = 250.0;
 
-    final opacityText = useState(0.0);
-
     _textAnimationController.addListener(() {
       opacityText.value = _textAnimationController.value;
-    
     });
-    
+
     return GestureDetector(
       onTap: () {
-        
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => OverviewScreen(
-              backgroundImage: game.imageUrl,
-            ),
-          ),
-        ).whenComplete(() => _textAnimationController.reset());
+        context.go('/overview', extra: game);
+        _textAnimationController.reset();
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
@@ -63,7 +54,14 @@ class GameCard extends HookConsumerWidget {
                       image: DecorationImage(fit: BoxFit.fitHeight, image: imageProvider),
                     ),
                   ),
-                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => Container(
+                    height: kCardHeight,
+                    width: 330,
+                    child: const Center(child: SizedBox(width: 25, height: 25, child: CircularProgressIndicator())),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
